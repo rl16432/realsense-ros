@@ -27,7 +27,7 @@ aluminum peripherial evaluation case.
   <xacro:include filename="$(find realsense2_description)/urdf/_materials.urdf.xacro" />
   <xacro:include filename="$(find realsense2_description)/urdf/_usb_plug.urdf.xacro" />
 
-  <xacro:macro name="sensor_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=true">
+  <xacro:macro name="sensor_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=true gazebo:=false">
     <xacro:property name="M_PI" value="3.1415926535897931" />
 
     <!-- The following values are approximate, and the camera node
@@ -171,11 +171,13 @@ aluminum peripherial evaluation case.
     </xacro:if>
     
     <!-- Add Gazebo Sim sensors -->
-    <xacro:gazebo_d435 camera_name="${name}" reference_link="${name}_link"
-      depth_frame="${name}_depth_frame"
-      color_frame="${name}_color_frame"
-      infra1_frame="${name}_infra1_frame"
-      infra2_frame="${name}_infra2_frame"
-      publish_pointcloud="true" />
+    <xacro:if value="${gazebo}">
+      <xacro:gazebo_d435 camera_name="${name}" reference_link="${name}_link"
+        depth_frame="${name}_depth_frame"
+        color_frame="${name}_color_frame"
+        infra1_frame="${name}_infra1_frame"
+        infra2_frame="${name}_infra2_frame"
+        publish_pointcloud="true" />
+    </xacro:if>
   </xacro:macro>
 </robot>
