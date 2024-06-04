@@ -27,7 +27,9 @@ aluminum peripherial evaluation case.
   <xacro:include filename="$(find realsense2_description)/urdf/_materials.urdf.xacro" />
   <xacro:include filename="$(find realsense2_description)/urdf/_usb_plug.urdf.xacro" />
 
-  <xacro:macro name="sensor_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=true gazebo:=false">
+  <xacro:macro name="sensor_d435" params="parent *origin name:=camera use_nominal_extrinsics:=false add_plug:=false use_mesh:=true gazebo:=false 
+    enable_infra1:=false enable_infra2:=false enable_color:=true enable_depth:=true 
+    color_width:=1920 color_height:=1080 color_fps:=30 depth_width:=1280 depth_height:=720 depth_fps:=30">
     <xacro:property name="M_PI" value="3.1415926535897931" />
 
     <!-- The following values are approximate, and the camera node
@@ -177,6 +179,9 @@ aluminum peripherial evaluation case.
         color_frame="${name}_color_frame"
         infra1_frame="${name}_infra1_frame"
         infra2_frame="${name}_infra2_frame"
+        enable_infra1="${enable_infra1}" enable_infra2="${enable_infra2}" enable_color="${enable_color}" enable_depth="${enable_depth}"
+        color_width="${color_width}" color_height="${color_height}" color_fps="${color_fps}"
+        depth_width="${depth_width}" depth_height="${depth_height}" depth_fps="${depth_fps}"
         publish_pointcloud="true" />
     </xacro:if>
   </xacro:macro>

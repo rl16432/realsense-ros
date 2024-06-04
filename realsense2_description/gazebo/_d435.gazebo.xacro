@@ -10,113 +10,125 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="gazebo_d435"
-    params="camera_name reference_link depth_frame color_frame infra1_frame infra2_frame publish_pointcloud:=true">
+    params="camera_name reference_link depth_frame color_frame infra1_frame infra2_frame 
+      enable_infra1 enable_infra2 enable_color enable_depth 
+      color_width color_height color_fps depth_width depth_height depth_fps 
+      publish_pointcloud:=true">
 
     <!-- Load parameters to model's main link-->
     <xacro:property name="deg_to_rad" value="0.01745329251994329577" />
     <gazebo reference="${reference_link}">
 
-      <sensor name="${robot_name}_${camera_name}_color" type="camera">
-        <pose relative_to="${color_frame}">0 0 0 0 0 0</pose>
-        <camera name="__default__">
-          <camera_info_topic>${robot_name}/${camera_name}/color/camera_info</camera_info_topic>
-          <horizontal_fov>${69.4*deg_to_rad}</horizontal_fov>
-          <image>
-            <width>1920</width>
-            <height>1080</height>
-            <format>RGB_INT8</format>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.007</stddev>
-          </noise>
-        </camera>
-        <topic>${robot_name}/${camera_name}/color/image_raw</topic>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>1</visualize>
-      </sensor>
+      <xacro:if value="${enable_color}">
+        <sensor name="${robot_name}_${camera_name}_color" type="camera">
+          <pose relative_to="${color_frame}">0 0 0 0 0 0</pose>
+          <camera name="__default__">
+            <camera_info_topic>${robot_name}/${camera_name}/color/camera_info</camera_info_topic>
+            <horizontal_fov>${69.4*deg_to_rad}</horizontal_fov>
+            <image>
+              <width>${color_width}</width>
+              <height>${color_height}</height>
+              <format>RGB_INT8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+          <topic>${robot_name}/${camera_name}/color/image_raw</topic>
+          <always_on>1</always_on>
+          <update_rate>${color_fps}</update_rate>
+          <visualize>0</visualize>
+        </sensor>
+      </xacro:if>
+      
+      <xacro:if value="${enable_infra1}">
+        <sensor name="${robot_name}_${camera_name}_infra1" type="camera">
+          <pose relative_to="${infra1_frame}">0 0 0 0 0 0</pose>
 
-      <sensor name="${robot_name}_${camera_name}_infra1" type="camera">
-        <pose relative_to="${infra1_frame}">0 0 0 0 0 0</pose>
+          <camera name="__default__">
+            <camera_info_topic>${robot_name}/${camera_name}/infra1/camera_info</camera_info_topic>
+            <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>L_INT8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.05</stddev>
+            </noise>
+          </camera>
+          <topic>${robot_name}/${camera_name}/infra1/image_raw</topic>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>0</visualize>
+        </sensor>
 
-        <camera name="__default__">
-          <camera_info_topic>${robot_name}/${camera_name}/infra1/camera_info</camera_info_topic>
-          <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
-          <image>
-            <width>1280</width>
-            <height>720</height>
-            <format>L_INT8</format>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.05</stddev>
-          </noise>
-        </camera>
-        <topic>${robot_name}/${camera_name}/infra1/image_raw</topic>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>0</visualize>
-      </sensor>
+      </xacro:if>
 
-      <sensor name="${robot_name}_${camera_name}_infra2" type="camera">
-        <pose relative_to="${infra2_frame}">0 0 0 0 0 0</pose>
-        <camera name="__default__">
-          <camera_info_topic>${robot_name}/${camera_name}/infra2/camera_info</camera_info_topic>
-          <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
-          <image>
-            <width>1280</width>
-            <height>720</height>
-            <format>L_INT8</format>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.05</stddev>
-          </noise>
-        </camera>
-        <topic>${robot_name}/${camera_name}/infra2/image_raw</topic>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>0</visualize>
-      </sensor>
+      <xacro:if value="${enable_infra2}">
+        <sensor name="${robot_name}_${camera_name}_infra2" type="camera">
+          <pose relative_to="${infra2_frame}">0 0 0 0 0 0</pose>
+          <camera name="__default__">
+            <camera_info_topic>${robot_name}/${camera_name}/infra2/camera_info</camera_info_topic>
+            <horizontal_fov>${85.2*deg_to_rad}</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>L_INT8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.05</stddev>
+            </noise>
+          </camera>
+          <topic>${robot_name}/${camera_name}/infra2/image_raw</topic>
+          <always_on>1</always_on>
+          <update_rate>30</update_rate>
+          <visualize>0</visualize>
+        </sensor>
+      </xacro:if>
 
-      <sensor name="${robot_name}_${camera_name}_depth" type="depth_camera">
-        <pose relative_to="${depth_frame}">0 0 0 0 0 0</pose>
-        <camera name="__default__">
-          <image>
-            <width>1280</width>
-            <height>720</height>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>10</far>
-          </clip>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.01</stddev>
-          </noise>
-        </camera>
-        <topic>${robot_name}/${camera_name}/depth/image_rect_raw</topic>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>1</visualize>
-      </sensor>
+      <xacro:if value="${enable_depth}">
+        <sensor name="${robot_name}_${camera_name}_depth" type="depth_camera">
+          <pose relative_to="${depth_frame}">0 0 0 0 0 0</pose>
+          <camera name="__default__">
+            <image>
+              <width>${depth_width}</width>
+              <height>${depth_height}</height>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>10</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </camera>
+          <topic>${robot_name}/${camera_name}/depth/image_rect_raw</topic>
+          <always_on>1</always_on>
+          <update_rate>${depth_fps}</update_rate>
+          <visualize>0</visualize>
+        </sensor>
+      </xacro:if>
     </gazebo>
 
   </xacro:macro>
