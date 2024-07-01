@@ -10,7 +10,7 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="gazebo_d435"
-    params="camera_name reference_link depth_frame color_frame infra1_frame infra2_frame 
+    params="robot_name camera_name reference_link depth_frame color_frame infra1_frame infra2_frame 
       enable_infra1 enable_infra2 enable_color enable_depth 
       color_width color_height color_fps depth_width depth_height depth_fps 
       publish_pointcloud:=true">
@@ -107,7 +107,7 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
 
       <xacro:if value="${enable_depth}">
         <sensor name="${robot_name}_${camera_name}_depth" type="depth_camera">
-          <pose relative_to="${depth_frame}">0 0 0 0 0 0</pose>
+          <pose relative_to="${color_frame}">0 0 0 0 0 0</pose>
           <camera name="__default__">
             <image>
               <width>${depth_width}</width>
@@ -115,7 +115,7 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
             </image>
             <clip>
               <near>0.1</near>
-              <far>10</far>
+              <far>100</far>
             </clip>
             <noise>
               <type>gaussian</type>
